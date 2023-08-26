@@ -15,7 +15,12 @@ public class CuttingCounter : BaseCounter, IHasProgress
 
     public override void Interact(Player player) {
         if (player.HasKitchenObject()) {
-            if (!HasKitchenObject()) {
+            if (HasKitchenObject()) {
+                if (player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject)) {
+                    if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
+                        GetKitchenObject().DestroySelf();
+                }
+            } else{
                 //Move from player to counter if you can cut it
                 if (HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO())) { 
                     player.GetKitchenObject().SetKitchenObjectParent(this);
