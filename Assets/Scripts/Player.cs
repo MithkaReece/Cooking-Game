@@ -5,11 +5,39 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] private float movementSpeed;
+    [SerializeField] private LayerMask countersLayerMask;
 
     private bool isWalking;
+    private Vector3 lastInteractDirection;
+
+    private void Start()
+    {
+        GameInput.OnInteractAction += GameInput_OnInteractAction;
+    }
+
+    private void GameInput_OnInteractAction(object sender, System.EventArgs e)
+    {
+        Vector3 movementVector = GameInput.GetMovementVectorNormalized();
+
+        if (movementVector != Vector3.zero)
+            lastInteractDirection = movementVector;
+
+        float interactDistance = 2f;
+        if (Physics.Raycast(transform.position, lastInteractDirection, out RaycastHit raycastHit, interactDistance, countersLayerMask)) {
+            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter)) {
+                clearCounter.Interact();
+            }
+        }
+    }
 
     // Update is called once per frame
     void Update(){
+
+        HandleMovement();
+    }
+
+
+    void HandleMovement() {
         Vector3 movementVector = GameInput.GetMovementVectorNormalized();
 
         // Try move player
@@ -24,10 +52,11 @@ public class Player : MonoBehaviour
         float rotateSpeed = 10f;
         transform.forward = Vector3.Slerp(transform.forward, movementVector, Time.deltaTime * rotateSpeed);
 
-
     }
 
     bool MovePlayer(Vector3 movementVector) {
+        movementVector.Normalize();
+
         float playerRadius = .7f;
         float playerHeight = 2f;
 
