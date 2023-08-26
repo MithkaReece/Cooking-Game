@@ -8,7 +8,7 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent {
     private KitchenObject kitchenObject;
 
     public virtual void Interact(Player player) { Debug.Log("BaseCounter.Interact();"); }
-    public virtual void InteractAlternate(Player player) { Debug.Log("BaseCounter.InteractAlternate();"); }
+    public virtual void InteractAlternate(Player player) { }
 
     public Transform GetKitchenObjectFollowTransform() {
         return counterTopPoint;
