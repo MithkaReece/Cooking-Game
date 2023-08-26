@@ -12,6 +12,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         public BaseCounter selectedCounter;
     }
 
+    public event EventHandler OnPickupSomething;
+
     [SerializeField] private float movementSpeed;
     [SerializeField] private LayerMask countersLayerMask;
     [SerializeField] private Transform kitchenObjectHoldPoint;
@@ -121,6 +123,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     public void SetKitchenObject(KitchenObject kitchenObject) {
         this.kitchenObject = kitchenObject;
+        if (kitchenObject != null)
+            OnPickupSomething?.Invoke(this, EventArgs.Empty);
     }
 
     public KitchenObject GetKitchenObject() {
