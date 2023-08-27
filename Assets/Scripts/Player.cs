@@ -39,11 +39,15 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     
     private void GameInput_OnInteractAction(object sender, System.EventArgs e)
     {
+        if (!GameManager.Instance.IsGamePlaying()) return;
+
         if (selectedCounter != null) 
             selectedCounter.Interact(this);
     }
 
     private void GameInput_OnInteractAlternateAction(object sender, System.EventArgs e) {
+        if (!GameManager.Instance.IsGamePlaying()) return;
+
         if (selectedCounter != null)
             selectedCounter.InteractAlternate(this);
     }
@@ -74,8 +78,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     }
 
     void SetSelectedCounter(BaseCounter selectedCounter) {
-        if (this.selectedCounter == selectedCounter)
-            return;
+        if (this.selectedCounter == selectedCounter) return;
+       
         this.selectedCounter = selectedCounter;
         
         OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs {
@@ -123,6 +127,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     public void SetKitchenObject(KitchenObject kitchenObject) {
         this.kitchenObject = kitchenObject;
+
         if (kitchenObject != null)
             OnPickupSomething?.Invoke(this, EventArgs.Empty);
     }
