@@ -22,6 +22,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     private Vector3 lastInteractDirection;
     private BaseCounter selectedCounter;
     private KitchenObject kitchenObject;
+    
 
     private void Awake()
     {
@@ -91,20 +92,23 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         Vector3 movementVector = GameInput.GetMovementVectorNormalized();
 
         // Try move player
-        if (!MovePlayer(movementVector)) {
+        if (!TryMovePlayer(movementVector)) {
             // Try x only movement
-            if (!MovePlayer(new Vector3(movementVector.x, 0, 0))) {
+            if (!TryMovePlayer(new Vector3(movementVector.x, 0, 0))) {
                 // Try z only movement
-                MovePlayer(new Vector3(0, 0, movementVector.z));
+                TryMovePlayer(new Vector3(0, 0, movementVector.z));
             }
         }
 
+        // Turn player towards movement
         float rotateSpeed = 10f;
         transform.forward = Vector3.Slerp(transform.forward, movementVector, Time.deltaTime * rotateSpeed);
-
     }
 
-    bool MovePlayer(Vector3 movementVector) {
+    bool TryMovePlayer(Vector3 movementVector) {
+        float movementDeadZone = .3f;
+        if (movementVector.magnitude < movementDeadZone) return false;
+
         movementVector.Normalize();
 
         float playerRadius = .7f;
@@ -113,6 +117,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         if (Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, movementVector, movementSpeed * Time.deltaTime)){
             return false; //Collision
         }
+        // Move player
         transform.position += movementVector * movementSpeed * Time.deltaTime;
         isWalking = movementVector != Vector3.zero;
         return true;
