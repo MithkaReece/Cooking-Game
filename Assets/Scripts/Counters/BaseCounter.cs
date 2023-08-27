@@ -5,7 +5,8 @@ using System;
 
 public class BaseCounter : MonoBehaviour, IKitchenObjectParent {
     public static event EventHandler OnAnyObjectPlacedHere;
-
+    private void OnDestroy() { OnAnyObjectPlacedHere = null; }
+     
     [SerializeField] private Transform counterTopPoint;
 
     private KitchenObject kitchenObject;
@@ -34,4 +35,6 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent {
     public bool HasKitchenObject() {
         return kitchenObject != null;
     }
+
+
 }

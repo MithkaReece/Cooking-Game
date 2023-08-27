@@ -7,8 +7,10 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-
     public event EventHandler OnStateChanged;
+    public event EventHandler OnGamePaused;
+    public event EventHandler OnGameUnpaused;
+
 
     private enum State {
         WaitingToStart,
@@ -22,7 +24,7 @@ public class GameManager : MonoBehaviour
     private float countdownToStartTimer = 3f;
     private float gamePlayingTimer;
     private float gamePlayingTimerMax = 10f;
-    
+    private bool isGamePaused = false;
 
     private void Awake()
     {
@@ -35,7 +37,11 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        GameInput.Instance.OnPauseAction += GameInput_OnPauseAction;
+    }
+
+    private void GameInput_OnPauseAction(object sender, EventArgs e) { 
+        PauseGame();
     }
 
     // Update is called once per frame
@@ -76,4 +82,17 @@ public class GameManager : MonoBehaviour
     public bool IsGameOver() { return state == State.GameOver; }
 
     public float GetGamePlayingTimerNormalized() { return 1 - (gamePlayingTimer / gamePlayingTimerMax); }
+
+    public void PauseGame() {
+        isGamePaused = !isGamePaused;
+
+        if (isGamePaused) {
+            Time.timeScale = 0f;
+            OnGamePaused?.Invoke(this, EventArgs.Empty);
+        } else {
+            Time.timeScale = 1f;
+           OnGameUnpaused?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
 }

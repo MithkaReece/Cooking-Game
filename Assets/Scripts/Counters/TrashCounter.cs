@@ -6,6 +6,7 @@ using System;
 public class TrashCounter : BaseCounter
 {
     public static event EventHandler OnAnyObjectTrashed;
+    private void OnDestroy() { OnAnyObjectTrashed = null; }
 
     public override void Interact(Player player)
     {

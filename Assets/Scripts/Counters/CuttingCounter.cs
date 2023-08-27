@@ -5,10 +5,12 @@ using System;
 
 public class CuttingCounter : BaseCounter, IHasProgress
 {
-    public event EventHandler<IHasProgress.OnProgressChangedEventArgs> OnProgressChanged;
-
-    public event EventHandler OnCut;
     public static event EventHandler OnAnyCut;
+    private void OnDestroy() { OnAnyCut = null; }
+
+    public event EventHandler<IHasProgress.OnProgressChangedEventArgs> OnProgressChanged;
+    public event EventHandler OnCut;
+
 
     [SerializeField] private CuttingRecipeSO[] cuttingRecipeSOArray;
 

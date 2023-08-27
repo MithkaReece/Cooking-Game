@@ -5,12 +5,13 @@ using System;
 
 public class DeliveryManager : MonoBehaviour
 {
+    public static DeliveryManager Instance { get; private set; }
+
     public event EventHandler OnRecipeSpawned;
     public event EventHandler OnRecipeCompleted;
     public event EventHandler OnRecipeSuccess;
     public event EventHandler OnRecipeFailed;
 
-    public static DeliveryManager Instance { get; private set; }
 
 
     [SerializeField] private RecipeListSO recipeListSO;
