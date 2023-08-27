@@ -16,7 +16,6 @@ public class ProgressBarUI : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log(hasProgress);
         hasProgress.OnProgressChanged += HasProgress_OnProgressChanged;
         barImage.fillAmount = 0f;
         Hide();
